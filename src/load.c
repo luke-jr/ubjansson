@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015 Luke Dashjr <luke-jr+jansson@utopios.org>
+ * Copyright (c) 2009-2012 Petri Lehtinen <petri@digip.org>
  *
  * Jansson is free software; you can redistribute it and/or modify
  * it under the terms of the MIT license. See LICENSE for details.
