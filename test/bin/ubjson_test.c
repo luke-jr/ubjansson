@@ -33,6 +33,7 @@ static void test2(json_t *json, int result, const char *binraw, const char *test
     {
         fprintf(stderr, "FAILED test  UBJSON %s test %s\n", binraw, testraw);
         ++failed;
+        return;
     }
     ++passed;
 }
