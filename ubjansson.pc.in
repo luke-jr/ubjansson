@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=${prefix}/include
+
+Name: UBJansson
+Description: Library for encoding, decoding and manipulating UBJSON data
+Version: @VERSION@
+Libs: -L${libdir} -lubjansson
+Libs.private: -lm
+Cflags: -I${includedir}
+Requires: jansson
