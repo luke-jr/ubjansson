@@ -4,6 +4,7 @@ include_HEADERS = ubjansson.h
 
 lib_LTLIBRARIES = libubjansson.la
 libubjansson_la_SOURCES = \
+	dump.c \
 	error.c \
 	jansson_private.h \
 	load.c

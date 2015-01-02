@@ -37,8 +37,14 @@ extern "C" {
 
 /* decoding */
 
-json_t *ubjson_loadb(const char *buffer, size_t buflen, size_t flags, json_error_t *error);
+json_t *ubjson_loadb(void *buffer, size_t buflen, size_t flags, json_error_t *error);
 json_t *ubjson_loadf(FILE *input, size_t flags, json_error_t *error);
+
+
+/* encoding */
+
+ssize_t ubjson_dumpb(json_t *json, void *buffer, size_t buflen, size_t flags);
+int ubjson_dump_callback(json_t *json, json_dump_callback_t callback, void *data, size_t flags);
 
 
 #ifdef __cplusplus

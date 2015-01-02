@@ -27,21 +27,58 @@ static json_t *test1(void *bin, size_t sz, const char *binraw, const char *testr
     return json;
 }
 
-static void test2(json_t *json, int result, const char *binraw, const char *testraw)
+static json_t *test2(json_t *json, int result, const char *binraw, const char *testraw)
 {
+    json_error_t err;
+    unsigned char buf[0x100];
+    ssize_t r;
+
     if (!result)
     {
         fprintf(stderr, "FAILED test  UBJSON %s test %s\n", binraw, testraw);
         ++failed;
+        return NULL;
+    }
+
+    r = ubjson_dumpb(json, buf, sizeof(buf), JSON_ENCODE_ANY);
+    json_decref(json);
+    if(r == -1)
+    {
+        fprintf(stderr, "FAILED encode UBJSON %s test %s\n", binraw, testraw);
+        ++failed;
+        return NULL;
+    }
+
+    json = ubjson_loadb(buf, r, JSON_DECODE_ANY, &err);
+    if(!json)
+    {
+        fprintf(stderr, "FAILED re-parse UBJSON %s test %s: %s\n", binraw, testraw, err.text);
+        ++failed;
+        return NULL;
+    }
+
+    return json;
+}
+
+static void test3(json_t *json, int result, const char *binraw, const char *testraw)
+{
+    if (!result)
+    {
+        fprintf(stderr, "FAILED re-test UBJSON %s test %s\n", binraw, testraw);
+        ++failed;
         return;
     }
+
     ++passed;
 }
 
 #define test(bin, x)  do {  \
     json = test1(bin, sizeof(bin)-1, #bin, #x);  \
-    if(json)  \
-        test2(json, x, #bin, #x);  \
+    if(json) {  \
+        json = test2(json, x, #bin, #x);  \
+        if(json)  \
+            test3(json, x, #bin, #x);  \
+    }  \
 } while(0)
 
 int main(int argc, char *argv[])

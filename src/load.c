@@ -368,7 +368,7 @@ static int buffer_get(void *data)
     return (unsigned char)c;
 }
 
-json_t *ubjson_loadb(const char *buffer, size_t buflen, size_t flags, json_error_t *error)
+json_t *ubjson_loadb(void *buffer, size_t buflen, size_t flags, json_error_t *error)
 {
     json_t *result;
     buffer_data_t stream_data;
