@@ -144,6 +144,32 @@ int main(int argc, char *argv[])
     test("{#i\x02""i\x02""ab""i\x05""i\x01""aU\xff", json_is_object(json) && json_object_size(json) == 2 && json_is_integer(json_object_get(json, "a")) && json_is_integer(json_object_get(json, "ab")) && json_integer_value(json_object_get(json, "ab")) == 5 && json_integer_value(json_object_get(json, "a")) == 0xff);
     test("{i\x02""ab""U\x05""i\x01""aU\xff}", json_is_object(json) && json_object_size(json) == 2 && json_is_integer(json_object_get(json, "a")) && json_is_integer(json_object_get(json, "ab")) && json_integer_value(json_object_get(json, "ab")) == 5 && json_integer_value(json_object_get(json, "a")) == 0xff);
 
+    FILE *F = tmpfile();
+    if (fwrite("{i\x02""ab""U\x05""i\x01""aU\xff}", 13, 1, F) != 1)
+    {
+        fprintf(stderr, "Write to tmpfile failed\n");
+        ++failed;
+    }
+    else
+    {
+        rewind(F);
+        json_error_t err;
+        json = ubjson_loadf(F, 0, &err);
+        if (!json)
+        {
+            fprintf(stderr, "FAILED load file: %s\n", err.text);
+            ++failed;
+        }
+        else
+        if (json_is_object(json) && json_object_size(json) == 2 && json_is_integer(json_object_get(json, "a")) && json_is_integer(json_object_get(json, "ab")) && json_integer_value(json_object_get(json, "ab")) == 5 && json_integer_value(json_object_get(json, "a")) == 0xff)
+            ++passed;
+        else
+        {
+            fprintf(stderr, "FAILED file test\n");
+            ++failed;
+        }
+    }
+
     printf("%d passed, %d failed\n", passed, failed);
     return failed;
 }

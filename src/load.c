@@ -386,3 +386,24 @@ json_t *ubjson_loadb(const char *buffer, size_t buflen, size_t flags, json_error
     result = parse_ubjson(buffer_get, &stream_data, flags, error);
     return result;
 }
+
+json_t *ubjson_loadf(FILE *input, size_t flags, json_error_t *error)
+{
+    const char *source;
+    json_t *result;
+
+    if(input == stdin)
+        source = "<stdin>";
+    else
+        source = "<stream>";
+
+    jsonp_error_init(error, source);
+
+    if (input == NULL) {
+        error_set(error, NULL, "wrong arguments");
+        return NULL;
+    }
+
+    result = parse_ubjson(fgetc, input, flags, error);
+    return result;
+}
